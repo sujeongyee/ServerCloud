@@ -27,7 +27,6 @@ import NoticeWrite from "./adminMain/NoticeWrite";
 import UserInQuryWrite from "./userMain/UserInQuryWrite";
 import UserInQuryDetail from "./userMain/UserInQuryDetail";
 
-import MainAdmin from "./adminMain/MainAdmin";
 import EnAnnoList from "./enMain/EnAnnoList";
 import EnInQuryDetail from "./enMain/EnInQuryDetail";
 import EnInQuryWrite from "./enMain/EnInQuryWrite";
@@ -89,6 +88,7 @@ import ProjectDetailChart from "./userMain/ProjectDetailChart";
 import AdEngineerList from "./adminMain/AdEngineerList";
 import InspectionList from "./enMain/InspectionList";
 import EnEngDetail from "./enMain/Calendar";
+import MainAdmin from "./adminMAin/MainAdmin";
 
 
 function App() {

@@ -235,15 +235,7 @@ console.log("값"+ProjectDetailList)
                               </td>
                               <td className="border-top-0 px-2 py-4">
                                 <div className="d-flex no-block ">
-                                  <div className="me-3">
-                                    <img
-                                      src="../img/widget-table-pic1.jpg"
-                                      alt="user"
-                                      className="rounded-circle"
-                                      width="45"
-                                      height="45"
-                                    />
-                                  </div>
+                                  
                                   <div>
                                     <h5 className="text-dark mb-0 font-16 font-weight-medium">
                                       {list.eng_name}

@@ -56,7 +56,7 @@ function EnglWorkInfo() {
                   return (
                     <li key={index}>
                       <div className="direction-l">
-                        <div className="flag-wrapper">
+                        <div className="flag-wrapper2">
                           <span className="flag workinfoo">{data.work_division}</span>
                           <span className="time-wrapper">
                             <span className="work-time">{formatDateWithoutTime(data.work_date)}</span>
