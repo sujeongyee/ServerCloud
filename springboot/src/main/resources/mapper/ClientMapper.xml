@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.server.cloud.client.service.ClientMapper">
+
+	<!-- 고객 정보 불러오기 --> 
+	<select id="getCusList" resultType="CusVO">
+		
+	   SELECT cus_num,
+	   		  cus_company_name,
+       		  cus_managet_name,
+       		  cus_phone_number,
+       		  cus_email ,
+       		  cus_business_id ,
+       		  cus_postal_code, 
+       		  CONCAT(cus_address1, cus_address2) as cus_address1
+	  FROM CUSTOMER
+	  WHERE cus_id = #{cus_id};
+		
+	</select>
+	
+	<!-- 프로젝트 정보 입력 -->
+	<insert id="proApplyForm" parameterType="ProjectInfoVO">
+		
+		
+		INSERT INTO PROJECTINFO (pro_id,
+								 pro_name,
+								 pro_startdate,
+								 pro_rep,
+								 pro_info, 
+								 pro_pi,
+								 cus_id,
+								 pro_enddate
+								 )
+		VALUES (#{pro_id},
+				#{pro_name}, 
+			 	#{pro_startdate},
+			 	#{pro_rep},  
+			 	#{pro_info}, 
+			 	#{pro_pi},
+			 	#{cus_id},
+			 	#{pro_enddate}
+			 	)
+			 	
+	
+	</insert>
+	
+	<!-- 서버 정보 입력 -->
+	<insert id="serverApplyForm">
+	
+
+		INSERT INTO SERVER (server_name, 
+							ip_address, 
+							operating_system, 
+							cpu, 
+							ram, 
+							disk_capacitygb,
+							pro_id)
+		VALUES 
+	  <foreach collection='list' item='server' separator=','>    
+			   (#{server.server_name}, 
+				#{server.ip_address}, 
+				#{server.operating_system}, 
+				#{server.cpu}, 
+				#{server.ram}, 
+				#{server.disk_capacitygb},
+				#{server.pro_id})
+	  </foreach>	
+	  
+	</insert>
+	
+	<!-- 프로젝트 정보 불러오기 --> 
+	<select id="getProList" resultType="ProjectInfoVO">
+		
+	   SELECT *
+      FROM PROJECTINFO
+	  WHERE cus_id = #{cus_id};
+		
+	</select>
+	
+	<!-- 프로젝트 상세 정보 불러오기 --> 
+	<select id="projectDetail">
+		
+	  select * from PROJECTINFO p 
+	  left join SERVER s 
+	  on p.pro_id = s.pro_id
+	  left join ENGINEER e
+	  on s.eng_enid = e.eng_enid
+	  left join ENG_TEAM team
+	  on e.team_num = team.team_num
+	  where p.pro_id = #{pro_id}
+		
+	</select>
+	
+	
+	<!-- 점검 요청 등록 -->
+	<insert id="insRequestForm" parameterType="InsRequestVO">
+		
+		INSERT INS_REQUEST(insRequest_type,
+						   insRequest_content, 
+						   cus_id, 
+						   server_id)
+		VALUES(#{insRequest_type},
+			   #{insRequest_content}, 
+			   #{cus_id}, 
+			   #{server_id})
+		
+	</insert>
+	
+	
+	<!-- 점검 요청 목록 -->
+	<select id="getInsRequestCheck" resultType="InsRequestVO">
+		
+		SELECT ir.*, s.server_name FROM INS_REQUEST ir
+		left join SERVER s
+		on ir.server_id = s.server_id
+		WHERE ir.server_id = #{server_id} and ir.cus_id = #{cus_id}
+	
+	</select>
+	
+	
+	
+
+   <!-- 작업 내역 목록 -->      
+   <select id="projectDetailList">
+   
+WITH RankedWorkInfo AS (
+    SELECT
+        W.PRO_ID AS PRO_ID,
+        W.WORK_DATE AS WORK_DATE,
+        W.WORK_DIVISION AS WORK_INFO,
+        W.WORK_TIME AS WORK_TIME,
+        MAX(W.WORK_CPU) AS WORK_CPU,
+        MAX(W.WORK_RAM) AS WORK_RAM,
+        MAX(W.WORK_HDD) AS WORK_HDD,
+        W.WORK_STATUS AS WORK_STATUS,
+        W.WORK_NOTE AS WORK_NOTE,
+        W.WORK_ESTIMATE AS WORK_ESTIMATE,
+        W.SERVER_ID AS SERVER_ID,
+        W.ENG_ENID AS ENG_ENID,
+        S.SERVER_NAME AS SERVER_NAME,
+        E.ENG_NAME AS ENG_NAME,
+        P.PRO_NAME AS PRO_NAME,
+        P.CUS_ID AS CUS_ID,
+        ROW_NUMBER() OVER (PARTITION BY S.SERVER_NAME ORDER BY W.WORK_DATE DESC) AS ROWNUM
+    FROM WORKINFO W
+    JOIN SERVER S ON W.SERVER_ID = S.SERVER_ID
+    JOIN ENGINEER E ON W.ENG_ENID = E.ENG_ENID
+    JOIN PROJECTINFO P ON W.PRO_ID = P.PRO_ID
+    WHERE P.CUS_ID = #{CUS_ID}
+    GROUP BY
+        W.PRO_ID,
+        W.WORK_DATE,
+        W.WORK_DIVISION,
+        W.WORK_STATUS,
+        W.WORK_NOTE,
+        W.WORK_TIME,
+        W.WORK_ESTIMATE,
+        W.SERVER_ID,
+        W.ENG_ENID,
+        S.SERVER_NAME,
+        E.ENG_NAME,
+        P.PRO_NAME,
+        P.CUS_ID
+)
+
+SELECT
+    R.PRO_ID,
+    R.WORK_DATE,
+    R.WORK_INFO AS WORK_DIVISION,
+    R.WORK_TIME,
+    R.WORK_CPU,
+    R.WORK_RAM,
+    R.WORK_HDD,
+    R.WORK_STATUS,
+    R.WORK_NOTE,
+    R.WORK_ESTIMATE,
+    R.SERVER_ID,
+    R.ENG_ENID,
+    R.SERVER_NAME,
+    R.ENG_NAME,
+    R.PRO_NAME,
+    R.CUS_ID
+FROM RankedWorkInfo R
+WHERE R.ROWNUM = 1;
+
+
+   </select>
+   
+   
+   <!-- 작업 내역 로그 -->
+   <select id="projectDetailChart">
+         
+	   SELECT distinct 
+	       P.PRO_NAME AS pro_name,
+	       P.CUS_ID as cus_id ,
+	       S.SERVER_NAME AS server_name,
+	       E.ENG_NAME AS eng_name,
+	       E.eng_phone as eng_phone,
+	       T.TEAM_ID as team_id, 
+	       W.WORK_DATE AS work_date,
+	       W.WORK_DIVISION AS work_division,
+	       W.WORK_TIME AS work_time,
+	       W.WORK_CPU AS work_cpu,
+	       W.WORK_RAM AS work_ram,
+	       W.WORK_HDD AS work_hdd,
+	       S.SERVER_STATUS AS server_status,
+	       W.WORK_STATUS AS work_status,
+	       W.WORK_NOTE AS work_note,
+	       W.WORK_ESTIMATE AS work_estimate,
+	       W.PRO_ID AS pro_id
+	   FROM WORKINFO W
+	   JOIN SERVER S ON W.SERVER_ID = S.SERVER_ID
+	   JOIN ENGINEER E ON W.ENG_ENID = E.ENG_ENID
+	   JOIN PROJECTINFO P ON W.PRO_ID = P.PRO_ID
+	   LEFT JOIN ENG_TEAM T ON E.TEAM_NUM = T.TEAM_NUM
+	   WHERE P.PRO_ID = #{pro_id} and S.SERVER_ID = #{server_id}
+	   ORDER BY work_date;
+   
+   </select>
+   
+	<!--  메인 화면 프로젝트 정보 불러오기 --> 
+	<select id="projectMain">
+		
+	  select * from PROJECTINFO p 
+	  left join SERVER s 
+	  on p.pro_id = s.pro_id
+	  left join ENGINEER e
+	  on s.eng_enid = e.eng_enid
+	  where p.cus_id = #{cus_id}
+    and p.pro_status !='계약만료'
+		
+	</select>
+
+  	<select id="getInspection">
+		SELECT 
+		    P.PRO_NAME AS PRO_NAME,
+		    COALESCE(SUM(CASE WHEN W.WORK_DIVISION = '정기점검' THEN 1 ELSE 0 END), 0) AS PERIODIC,
+		    COALESCE(SUM(CASE WHEN W.WORK_DIVISION = '긴급점검' THEN 1 ELSE 0 END), 0) AS DISABILITY,
+		    COALESCE(SUM(CASE WHEN W.WORK_DIVISION = '장애대응' THEN 1 ELSE 0 END), 0) AS MAINTENANCE
+		FROM PROJECTINFO P
+		LEFT JOIN WORKINFO W ON P.PRO_ID = W.PRO_ID
+		WHERE P.CUS_ID = #{CUS_ID}
+		GROUP BY P.PRO_NAME
+		ORDER BY P.PRO_NAME;
+		</select>
+
+
+</mapper>
