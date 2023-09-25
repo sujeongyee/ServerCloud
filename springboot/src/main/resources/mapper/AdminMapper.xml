@@ -254,9 +254,8 @@
      <select id = "getwork">
      SELECT
           SUM(CASE WHEN W.WORK_DIVISION = '정기점검' THEN 1 ELSE 0 END) AS periodic,
-          SUM(CASE WHEN W.WORK_DIVISION = '긴급점검' THEN 1 ELSE 0 END) AS emergency,
-          SUM(CASE WHEN P.PRO_STATUS = '승인대기중' THEN 1 ELSE 0 END) AS approval,
-          SUM(CASE WHEN P.PRO_STATUS = '계약만료' THEN 1 ELSE 0 END) AS complete
+          SUM(CASE WHEN W.WORK_DIVISION = '긴급출동' THEN 1 ELSE 0 END) AS emergency,
+          SUM(CASE WHEN W.WORK_DIVISION = '장애대응' THEN 1 ELSE 0 END) AS approval
       FROM 
           WORKINFO W
       JOIN 

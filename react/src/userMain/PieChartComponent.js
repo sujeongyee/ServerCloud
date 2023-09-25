@@ -4,16 +4,15 @@ import Chart from 'tui-chart'; // tui-chart의 모듈을 가져옴
 import 'tui-chart/dist/tui-chart.css';
 // import { PieChart } from '@toast-ui/chart';
 
-const PieChartComponent = ({periodic,emergency,approval,complete}) => {
+const PieChartComponent = ({periodic,emergency,approval}) => {
   const firstPeriodic = periodic[0];
   const firstemergency = emergency[0];
   const firstapproval = approval[0];
-  const firstcomplete = complete[0];
   const containerRef = useRef(null);
   console.log(periodic)
 
   useEffect(() => {
-    if (periodic && emergency && approval && complete) {
+    if (periodic && emergency && approval) {
      const container = containerRef.current;
         const data = {
             categories: ['총 프로젝트 현황'],
@@ -23,17 +22,17 @@ const PieChartComponent = ({periodic,emergency,approval,complete}) => {
                     data: firstPeriodic,
                 },
                 {
-                    name: '장애대응',
+                    name: '긴급출동',
                     data: firstemergency,
                 },
                 {
-                    name: '계약만료',
+                    name: '장애대응',
                     data: firstapproval,
                 },
-                {
-                    name: '승인요청',
-                    data: firstcomplete,
-                }
+                // {
+                //     name: '계약만료',
+                //     data: firstcomplete,
+                // }
             ],
         };
         const options = {
@@ -60,7 +59,7 @@ const PieChartComponent = ({periodic,emergency,approval,complete}) => {
       chart.destroy();
     };
   }
-  }, [periodic,emergency,approval,complete]);
+  }, [periodic,emergency,approval]);
 
   return <div id="chart-area" ref={containerRef} />;
 };

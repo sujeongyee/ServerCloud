@@ -19,7 +19,7 @@ function MainAdmin() {
   const [periodic, setPeriodic] = useState([0]);
   const [emergency, setEmergency] = useState([0]);
   const [approval, setApproval] = useState([0]);
-  const [complete, setComplete] = useState([0]);
+
 
   useEffect(() => {
     axios.get("http://13.124.230.133:8888/api/main/admin").then((response) => {
@@ -32,7 +32,7 @@ function MainAdmin() {
       const receivedperiodic = data2.periodic;
       const receivedemergency= data2.emergency;
       const receivedapproval = data2.approval;
-      const receivedcomplete = data2.complete;
+  
 
 
 
@@ -45,7 +45,7 @@ function MainAdmin() {
       setPeriodic(receivedperiodic);
       setEmergency(receivedemergency);
       setApproval(receivedapproval);
-      setComplete(receivedcomplete);
+
       console.log(receivedperiodic)
     })
 
@@ -250,7 +250,7 @@ function MainAdmin() {
             <div className="col-lg-6 col-md-12">
               <div className="card cardpd">
                 <div className="card-body">
-                  <h4 className="card-title">총 프로젝트 현황</h4>
+                  <h4 className="card-title">총 프로젝트 점검 현황</h4>
                   <div
                     id="chart-area"
                     className="col-lg-6 col-md-12" /* style={{ width: '466px', height: '350px' }} */
@@ -259,7 +259,6 @@ function MainAdmin() {
                         periodic={periodic}
                         emergency={emergency}
                         approval={approval}
-                        complete={complete}
                       />
                   </div>
                 </div>

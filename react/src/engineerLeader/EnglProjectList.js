@@ -154,7 +154,7 @@ function EnglProjectList(props) {
                               <th scope="row" className="col1st">
                                 {(currentPage - 1) * itemsPerPage + key + 1}
                               </th>
-                              <td>
+                              <td style={{overflow:'hidden'}}>
                                 <Link
                                   to={{
                                     pathname: `/engineerleader/projectDetail/${list.pro_id}`,
@@ -164,7 +164,7 @@ function EnglProjectList(props) {
                                   {list.pro_name}
                                 </Link>
                               </td>
-                              <td>{list.cus_company_name}</td>
+                              <td style={{overflow:'hidden'}} >{list.cus_company_name}</td>
                               <td>{list.pro_startdate}</td>
                               <td>{list.pro_enddate}</td>
                               <td>{list.pro_rep}</td>

@@ -201,8 +201,8 @@ public class AdminController {
 		List<AdminMainVO> work = adminService.getwork();
 		List<Integer> periodic = new ArrayList<>(); //정기
 		List<Integer> emergency = new ArrayList<>(); //긴급
-		List<Integer> approval = new ArrayList<>(); //승인대기중		
-		List<Integer> complete = new ArrayList<>(); //계약만료		
+		List<Integer> approval = new ArrayList<>(); //장애		
+			
 		
 		
 		for(QueryVO vo2 : inspectionList) {
@@ -214,7 +214,6 @@ public class AdminController {
 			periodic.add(vo3.getPeriodic()); //정기
 			emergency.add(vo3.getEmergency()); //긴급
 			approval.add(vo3.getApproval()); //승인대기중
-			complete.add(vo3.getComplete()); //계약만료
 		}
 		
 		
@@ -226,7 +225,7 @@ public class AdminController {
 		map.put("periodic",periodic);
 		map.put("emergency", emergency);
 		map.put("approval", approval);
-		map.put("complete", complete);
+
 		
 		return new ResponseEntity<>(map,HttpStatus.OK);
 	}

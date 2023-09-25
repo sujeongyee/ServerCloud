@@ -119,12 +119,12 @@ function Main() {
 
 
             <footer>
-                <section className="FloatingInquirystyle__FloatingInquiry-sc-5whm20-0 ylzFj gtm-inquiry">
+                {/* <section className="FloatingInquirystyle__FloatingInquiry-sc-5whm20-0 ylzFj gtm-inquiry">
                     <button type="button">
 
                         <img src="../img/channeltalk_character.png" alt="바로문의" />
                     </button>
-                </section>
+                </section> */}
                 <div id="footer">
              
                       <div className="footerLeft">
