@@ -40,19 +40,20 @@
 	</select>
 
 	<select id="engProInfo" resultType="EngSerProInfoWorkInfoVO">
-		SELECT DISTINCT
-		E.ENG_ENID,
-		E.ENG_NAME,
-		P.PRO_NAME,
-		P.PRO_ID
-		FROM ENGINEER E
-		LEFT JOIN SERVER S ON E.ENG_ENID = S.ENG_ENID
-		LEFT JOIN
-		PROJECTINFO P ON S.PRO_ID = P.PRO_ID
-		LEFT JOIN WORKINFO W ON W.ENG_ENID
-		= E.ENG_ENID
-		WHERE E.ENG_ENID = #{ENG_ENID};
-	</select>
+      SELECT DISTINCT
+      E.ENG_ENID,
+      E.ENG_NAME,
+      P.PRO_NAME,
+      P.PRO_ID
+      FROM ENGINEER E
+      LEFT JOIN SERVER S ON E.ENG_ENID = S.ENG_ENID
+      LEFT JOIN
+      PROJECTINFO P ON S.PRO_ID = P.PRO_ID
+      LEFT JOIN WORKINFO W ON W.ENG_ENID
+      = E.ENG_ENID
+      WHERE E.ENG_ENID = #{ENG_ENID} and P.PRO_STATUS = "프로젝트 진행중";
+   </select>
+
 
 	<select id="serverList" resultType="ServerVO">
 		SELECT * FROM SERVER;

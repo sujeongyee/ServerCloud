@@ -23,7 +23,7 @@ const EnglChartComponent = ({ periodic, disability, maintenance }) => {
           data:disability.length !== 0 ? disability : [0, 0, 0, 0],
         },
         {
-          name: '긴급출동',
+          name: '긴급점검',
           // data: maintenance==null?[0,0,0,0]:maintenance,
           data:maintenance.length !== 0 ? maintenance : [0, 0, 0, 0],
         },
